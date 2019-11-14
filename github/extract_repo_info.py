@@ -7,7 +7,7 @@ collection = mongo_db['github_repo']
 
 
 def extract_github_repos():
-    cond = {"branch": {'$exists': True}, "last_commit_time": {"$exists": True}}
+    cond = {"name": {'$exists': True}}
     models = list()
     for i, doc in enumerate(collection.find(cond)):
         sys.stdout.write("\rETL: %d" % i)
