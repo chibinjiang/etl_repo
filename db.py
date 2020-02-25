@@ -1,7 +1,8 @@
 from configs.connector import sql_engine
 from zhihu.models import *
 from anime.models import *
-from github.models import *
+from github.models import GithubRepoModel, GithubTopicModel
+from ziroom.models import ZiroomRentalModel, CommunityModel
 
 
 def init_database():
