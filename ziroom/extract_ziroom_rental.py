@@ -150,11 +150,12 @@ def extract_rental():
     rentals = ziroom_rental.find(valid_cond)
     for doc in rentals:
         rental_id = "_".join([doc['id'], doc['house_id'], doc['inv_id'], doc['inv_no']])
-        rental = ZiroomRentalModel.get_by(source_id=rental_id)
+        rental = ZiroomRentalModel.get_by(ZiroomRentalModel.source_id==rental_id)
         if rental:
             continue
         rental = ZiroomRentalModel()
-        community = CommunityModel.get_by(name=doc['resblock_name'], bizcircle_name=doc['bizcircle_name']) or CommunityModel()
+        community = CommunityModel.get_by(CommunityModel.name == doc['resblock_name'],
+                                          CommunityModel.bizcircle_name == doc['bizcircle_name']) or CommunityModel()
         process_each_rental(doc, community, rental)
         models.append(community)
         models.append(rental)
