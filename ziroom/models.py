@@ -68,7 +68,3 @@ class ZiroomRentalModel(Mixin, BaseModel):
     cover_picture = Column(TEXT)  # 封面图
     created = Column(TIMESTAMP, nullable=False, index=True)
     updated = Column(TIMESTAMP, nullable=False, index=True)
-
-
-GeometryDDL(CommunityModel.__table__)
-GeometryDDL(ZiroomRentalModel.__tbale__)

@@ -13,6 +13,7 @@ from configs.connector import mongo_db
 from model import save_batch
 from .models import ZiroomRentalModel, CommunityModel
 
+
 def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRentalModel):
     rental.source_id = "_".join([doc['id'], doc['house_id'], doc['inv_id'], doc['inv_no']])
     tags = [tag['title'] for tag in doc.get('tags', [])]
@@ -24,7 +25,7 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
     rental.bedroom_num = doc['bedroom']
     rental.air_quality = doc['air_quality']
     rental.price = int(doc['sale_price'])
-    rental.floor_total = int(doc['floor_total']) if doc.get('floor_total') or None
+    rental.floor_total = int(doc['floor_total']) if doc.get('floor_total') else None
     community.source_id = doc['resblock_id']
     community.name = doc['resblock_name']
     if 'lng' in doc and 'lat' in doc:
