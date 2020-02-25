@@ -15,7 +15,7 @@ from .models import ZiroomRentalModel, CommunityModel
 
 
 def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRentalModel):
-    rental.source_id = "_".join([doc['id'], doc['house_id'], doc['inv_id'], doc['inv_no']])
+    print("处理: ", str(doc['_id']))
     tags = [tag['title'] for tag in doc.get('tags', [])]
     rental.is_first_signed = 1 if '首次出租' in tags else 0
     rental.has_3d = doc['has_3d']
@@ -149,8 +149,12 @@ def extract_rental():
     ziroom_rental = mongo_db['ziroom_rental_raw']
     rentals = ziroom_rental.find(valid_cond)
     for doc in rentals:
+        rental_id = "_".join([doc['id'], doc['house_id'], doc['inv_id'], doc['inv_no']])
+        rental = ZiroomRentalModel.get_by(source_id=rental_id)
+        if rental:
+            continue
         rental = ZiroomRentalModel()
-        community  = CommunityModel.get(name=doc['resblock_name'], bizcircle_name=doc['bizcircle_name'])
+        community = CommunityModel.get(name=doc['resblock_name'], bizcircle_name=doc['bizcircle_name'])
         process_each_rental(doc, community, rental)
         models.append(community)
         models.append(rental)
