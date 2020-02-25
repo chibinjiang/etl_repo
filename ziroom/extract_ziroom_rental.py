@@ -19,7 +19,7 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
     tags = [tag['title'] for tag in doc.get('tags', [])]
     rental.is_first_signed = 1 if '首次出租' in tags else 0
     rental.has_3d = doc['has_3d']
-    rental.has_lift = doc['have_lift']
+    # rental.has_lift = doc['have_lift']
     rental.has_video = doc['has_video']
     rental.is_turned = doc['turn']
     rental.sort_score = doc['sort_score']
