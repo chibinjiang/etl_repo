@@ -1,8 +1,8 @@
 from sqlalchemy import Column, VARCHAR, INTEGER, TEXT, JSON, TIMESTAMP, SMALLINT, FLOAT
-from geoalchemy2 import Geometry
 from configs.connector import BaseModel
 
 from model import Mixin
+# 华为云的pg 不支持postgis, 除非提工单
 
 
 class CommunityModel(Mixin, BaseModel):
@@ -14,8 +14,8 @@ class CommunityModel(Mixin, BaseModel):
     city_name = Column(VARCHAR(32))
     district_name = Column(VARCHAR(32))
     bizcircle_name = Column(VARCHAR(32))
-    # geo_location = GeometryColumn(Point(2))  # 维度: 2, srid defaults to 4326
-    geo_location = Column(Geometry('POINT', srid=4326))
+    latitude = Column(FLOAT)
+    longitude = Column(FLOAT)
     sale_price = Column(FLOAT, index=True)
     created = Column(TIMESTAMP, nullable=False, index=True)
     updated = Column(TIMESTAMP, nullable=False, index=True)
@@ -33,7 +33,8 @@ class ZiroomRentalModel(Mixin, BaseModel):
     rent_type = Column(SMALLINT, index=True)  # 整租 or 合租
     is_first_signed = Column(SMALLINT, index=True, nullable=False)
     tags = Column(JSON)
-    geo_location = Column(Geometry('POINT'))
+    latitude = Column(FLOAT)
+    longitude = Column(FLOAT)
     activity_list = Column(JSON)
     has_video = Column(SMALLINT)
     has_3d = Column(SMALLINT)
@@ -66,5 +67,6 @@ class ZiroomRentalModel(Mixin, BaseModel):
     sofa_size = Column(SMALLINT)
     furniture_config = Column(JSON)
     cover_picture = Column(TEXT)  # 封面图
+    expiration_time = Column(TIMESTAMP, index=True)  # 拉链表
     created = Column(TIMESTAMP, nullable=False, index=True)
     updated = Column(TIMESTAMP, nullable=False, index=True)

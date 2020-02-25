@@ -19,22 +19,31 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
     tags = [tag['title'] for tag in doc.get('tags', [])]
     rental.is_first_signed = 1 if '首次出租' in tags else 0
     rental.has_3d = doc['has_3d']
+    rental.has_lift = doc['have_lift']
     rental.has_video = doc['has_video']
     rental.is_turned = doc['turn']
     rental.sort_score = doc['sort_score']
     rental.bedroom_num = doc['bedroom']
+    rental.parlor_num = doc['parlor']
+    rental.face = doc['face']
+    rental.area_order = doc['area_order']
+    rental.floor = doc['floor']
+    rental.floor_total = doc['floor_total']
     rental.air_quality = doc['air_quality']
-    rental.price = int(doc['sale_price'])
+    # 房间配套
+    # rental.bed_counter_size =
+    # rental.price = int(doc['sale_price'])
     rental.floor_total = int(doc['floor_total']) if doc.get('floor_total') else None
     community.source_id = doc['resblock_id']
     community.name = doc['resblock_name']
-    if 'lng' in doc and 'lat' in doc:
-        community.geo_location = 'POINT({} {})'.format(doc['lat'], doc['lng'])
-        rental.geo_location = 'POINT({} {})'.format(doc['lat'], doc['lng'])
+    if 'lng' in doc:
+        community.longitude = doc['lng']
+        rental.longitude = doc['lng']
+    if 'lat' in doc:
+        community.latitude = doc['lat']
+        rental.latitude = doc['lat']
     community.bizcircle_name = doc['bizcircle_name'].strip()
     community.district_name = doc['district_name'].strip()
-    # if re.search("\d+\.?\d*", doc.get('sale_price', '')):
-    #     community.sale_price = float(doc['sale_price'])
     community.updated = datetime.utcnow()
     community.created = datetime.utcnow()
     rental.updated = datetime.utcnow()
@@ -135,14 +144,7 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
 
 
 def extract_rental():
-    valid_cond = {
-        # 'can_sign_long': 1,
-        # 'real_price': {'$exists': True},
-        # 'subway_station_info': {'$regex': '\d+米'},
-        # "floor_total": {"$ne":  "0"},
-        # 'detail_info': {'$exists': True},
-        # 'sale_price': {'$exists': True}
-    }
+    valid_cond = {}
     models = list()
     ziroom_rental = mongo_db['ziroom_rental_raw']
     rentals = ziroom_rental.find(valid_cond)
