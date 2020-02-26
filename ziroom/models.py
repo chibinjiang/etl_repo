@@ -52,7 +52,7 @@ class ZiroomRentalModel(Mixin, BaseModel):
     sale_status = Column(SMALLINT)
     can_sign_date = Column(TIMESTAMP)
     can_sign_time = Column(TIMESTAMP)
-    can_reserve_time = Column(TIMESTAMP)
+    can_reserve_time = Column(INTEGER)
     can_sign_long = Column(SMALLINT)
     can_sign_short = Column(SMALLINT)
     subway_station_info = Column(JSON)
