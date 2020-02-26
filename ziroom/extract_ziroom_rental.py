@@ -150,7 +150,7 @@ def extract_rental():
     rentals = ziroom_rental.find(valid_cond)
     for doc in rentals:
         rental_id = "_".join([doc['id'], doc['house_id'], doc['inv_id'], doc['inv_no']])
-        rental = ZiroomRentalModel.get_by(ZiroomRentalModel.source_id==rental_id)
+        rental = ZiroomRentalModel.get_by(ZiroomRentalModel.source_id == rental_id)
         if rental:
             continue
         rental = ZiroomRentalModel()
