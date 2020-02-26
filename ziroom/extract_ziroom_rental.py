@@ -164,8 +164,36 @@ def extract_rental():
             rental.save()
 
 
+def deepcopy_db_object(model):
+    new_model = model.__class__()
+    for column in model.columns:
+        if column not in ['id', '_id']:
+            setattr(new_model, column, getattr(model, column))
+    return new_model
+
+
 def extract_price():
-    pass
+    ziroom_price = mongo_db['ziroom_rental_price']
+    prices = ziroom_price.find({})
+    for doc in prices:
+        rental = ZiroomRentalModel.get_by(ZiroomRentalModel.source_id.like('%{}%'.format(doc['inv_no'])))
+        if not rental:
+            print("No such rental: {}".format(doc['inv_no']))
+            continue
+        if rental.price is None:
+            print("{}: {} -> {}".format(doc['inv_no'], rental.price, doc['price']))
+            rental.price = doc['price']
+            rental.save()
+        elif doc['price'] != rental.price:
+            print("{}: {} -> {}".format(doc['inv_no'], rental.price, doc['price']))
+            new_rental = deepcopy_db_object(rental)
+            new_rental.price = doc['price']
+            new_rental.created = datetime.utcnow()
+            new_rental.updated = datetime.utcnow()
+            rental.expiration_time = doc['crawl_time']
+            rental.updated = datetime.utcnow()
+            rental.save()
+            new_rental.save()
 
 
 def extract_detail():
@@ -180,7 +208,7 @@ if __name__ == '__main__':
     """
     python -m ziroom.extract_ziroom_rental
     """
-    extract_rental()
-    # extract_price()
+    # extract_rental()
+    extract_price()
     # extract_detail()
     # delete_1_week_ago()
