@@ -157,10 +157,12 @@ def extract_rental():
         community = CommunityModel.get_by(CommunityModel.name == doc['resblock_name'],
                                           CommunityModel.bizcircle_name == doc['bizcircle_name']) or CommunityModel()
         process_each_rental(doc, community, rental)
-        models.append(community)
-        models.append(rental)
-    if models:
-        save_batch(models)
+        community.save()
+        rental.save()
+    #     models.append(community)
+    #     models.append(rental)
+    # if models:
+    #     save_batch(models)
 
 
 def extract_price():
