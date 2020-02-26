@@ -5,12 +5,9 @@
 3. 提取rental 详情页的信息
 4. 删除过去7天的原数据
 """
-import re
-import traceback
 from datetime import datetime
 
 from configs.connector import mongo_db
-from model import save_batch
 from .models import ZiroomRentalModel, CommunityModel
 
 
@@ -18,10 +15,13 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
     print("处理: ", str(doc['_id']))
     tags = [tag['title'] for tag in doc.get('tags', [])]
     rental.is_first_signed = 1 if '首次出租' in tags else 0
+    rental.name = doc['name']
     rental.has_3d = doc['has_3d']
+    rental.rent_type = doc['type']
     # rental.has_lift = doc['have_lift']
     rental.has_video = doc['has_video']
     rental.is_turned = doc['turn']
+    rental.tags = [tag['title'] for tag in doc.get('tags', [])]
     rental.sort_score = doc['sort_score']
     rental.bedroom_num = doc['bedroom']
     rental.parlor_num = doc['parlor']
@@ -30,6 +30,11 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
     rental.floor = doc['floor']
     rental.floor_total = doc['floor_total']
     rental.air_quality = doc['air_quality']
+    rental.can_sign_date = datetime.fromtimestamp(doc['can_sign_date']) if doc.get('can_sign_date') else None
+    rental.can_sign_time = datetime.fromtimestamp(doc['can_sign_time']) if doc.get('can_sign_time') else None
+    rental.can_reserve_time = doc['can_reserve_time']
+    rental.can_sign_long = doc['can_sign_long']
+    rental.can_sign_short = doc['can_sign_short']
     # 房间配套
     # rental.bed_counter_size =
     # rental.price = int(doc['sale_price'])
@@ -145,25 +150,18 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
 
 def extract_rental():
     valid_cond = {}
-    models = list()
     ziroom_rental = mongo_db['ziroom_rental_raw']
     rentals = ziroom_rental.find(valid_cond)
     for doc in rentals:
         rental_id = "_".join([doc['id'], doc['house_id'], doc['inv_id'], doc['inv_no']])
-        rental = ZiroomRentalModel.get_by(ZiroomRentalModel.source_id == rental_id)
-        if rental:
-            continue
-        rental = ZiroomRentalModel()
+        rental = ZiroomRentalModel.get_by(ZiroomRentalModel.source_id == rental_id) or ZiroomRentalModel()
         rental.source_id = rental_id
         community = CommunityModel.get_by(CommunityModel.name == doc['resblock_name'],
                                           CommunityModel.bizcircle_name == doc['bizcircle_name']) or CommunityModel()
         process_each_rental(doc, community, rental)
-        community.save()
-        rental.save()
-    #     models.append(community)
-    #     models.append(rental)
-    # if models:
-    #     save_batch(models)
+        if community.save():
+            rental.community_id = community.id
+            rental.save()
 
 
 def extract_price():

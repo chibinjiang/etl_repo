@@ -7,7 +7,7 @@ from model import Mixin
 
 class CommunityModel(Mixin, BaseModel):
     __tablename__ = 'ziroom_community'
-    _id = Column(INTEGER, primary_key=True, autoincrement=True)
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
     source_id = Column(VARCHAR(24), index=True, nullable=False)
     name = Column(VARCHAR(64), index=True, nullable=False)
     community_name = Column(VARCHAR(32))
@@ -26,7 +26,7 @@ class ZiroomRentalModel(Mixin, BaseModel):
     如何处理 多个 source_id
     """
     __tablename__ = 'ziroom_rental'
-    _id = Column(INTEGER, primary_key=True, autoincrement=True)
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
     source_id = Column(VARCHAR(36), index=True, nullable=False)  # id(8)+house_id(8)+inv_id(6)+ind_no(9)
     community_id = Column(INTEGER, index=True)
     name = Column(VARCHAR(64))
