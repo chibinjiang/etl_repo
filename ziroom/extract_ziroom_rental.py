@@ -154,6 +154,7 @@ def extract_rental():
         if rental:
             continue
         rental = ZiroomRentalModel()
+        rental.source_id = rental_id
         community = CommunityModel.get_by(CommunityModel.name == doc['resblock_name'],
                                           CommunityModel.bizcircle_name == doc['bizcircle_name']) or CommunityModel()
         process_each_rental(doc, community, rental)
