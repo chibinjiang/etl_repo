@@ -195,6 +195,29 @@ def extract_price():
             rental.save()
             new_rental.save()
 
+def split_list(lst, size):
+    """
+    将lst 分成 等份, 每份size 个
+    :param lst:
+    :param size:
+    :return:
+    """
+    results = list()
+    for i in range(0, len(lst), size):
+        print(i, i+size)
+        results.append(lst[i: i+size])
+    return results
+
+
+def delete_done_docs():
+    ids = list()
+    ziroom_rental = mongo_db['ziroom_rental_raw']
+    for model in ZiroomRentalModel.query():
+        ids.append(model.source_id.split('_')[-1])
+    for i, batch_ids in enumerate(split_list(ids, 1000)):
+        result = ziroom_rental.delete_many({'inv_no': {'$in': batch_ids}})
+        print(i, " deleted_count: ", result["deleted_count"])
+
 
 def extract_detail():
     pass
@@ -209,6 +232,6 @@ if __name__ == '__main__':
     python -m ziroom.extract_ziroom_rental
     """
     # extract_rental()
-    extract_price()
+    delete_done_docs()
     # extract_detail()
     # delete_1_week_ago()
