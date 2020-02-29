@@ -195,6 +195,7 @@ def extract_price():
             rental.save()
             new_rental.save()
 
+
 def split_list(lst, size):
     """
     将lst 分成 等份, 每份size 个
@@ -214,9 +215,8 @@ def delete_done_docs():
     for model in ZiroomRentalModel.query():
         ids.append(model.source_id.split('_')[-1])
     for i, batch_ids in enumerate(split_list(ids, 1000)):
+        print(i, " deleted: ", len(batch_ids))
         result = ziroom_rental.delete_many({'inv_no': {'$in': batch_ids}})
-        import ipdb; ipdb.set_trace()
-        print(i, " deleted_count: ", result)
 
 
 def extract_detail():
