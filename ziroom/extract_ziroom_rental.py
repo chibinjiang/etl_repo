@@ -5,6 +5,7 @@
 3. 提取rental 详情页的信息
 4. 删除过去7天的原数据
 """
+import time
 from datetime import datetime
 
 from configs.connector import mongo_db
@@ -215,8 +216,9 @@ def delete_done_docs():
     for model in ZiroomRentalModel.query():
         ids.append(model.source_id.split('_')[-1])
     for i, batch_ids in enumerate(split_list(ids, 1000)):
-        print(i, " deleted: ", len(batch_ids))
+        epoch_time = time.time()
         result = ziroom_rental.delete_many({'inv_no': {'$in': batch_ids}})
+        print(i, " deleted: ", len(batch_ids), time.time() - epoch_time)
 
 
 def extract_detail():
