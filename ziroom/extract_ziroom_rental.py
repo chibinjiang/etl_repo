@@ -70,7 +70,7 @@ def process_each_rental(doc: dict, community: CommunityModel, rental: ZiroomRent
     #     for tag in tags:
     #         if tag in ignore_tags:
     #             continue
-    #         tag = tag.strip()
+    #         tag q= tag.strip()
     #         rental['tag_' + tag] = 1
     #     rental['id'] = doc['inv_no']
     #     rental['has_video'] = doc['has_video']
@@ -233,7 +233,7 @@ if __name__ == '__main__':
     """
     python -m ziroom.extract_ziroom_rental
     """
-    # extract_rental()
-    delete_done_docs()
+    extract_rental()
+    # delete_done_docs()
     # extract_detail()
     # delete_1_week_ago()
