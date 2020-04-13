@@ -23,6 +23,10 @@ def parse_each_job(doc):
     if nums:
         data['min_experience'] = int(nums.group(1))
         data['max_experience'] = int(nums.group(2))
+    if '1年以内' == doc.get('jobExperience'):
+        data['min_experience'], data['max_experience'] = 0, 1
+    if '应届生' == doc.get('jobExperience'):
+        data['min_experience'], data['max_experience'] = 0, 0
     nums = re.search("(\d+)-(\d+)", doc.get('salaryDesc') or '')
     if nums:
         data['min_salary'] = int(nums.group(1)) * 1000
@@ -52,10 +56,11 @@ def extract_job():
             raise Exception("No such company: {}".format(doc['brandName']))
         # recruiter
         recruiter = BozzRecruiterModel.get_by(
-            BozzRecruiterModel.name == doc['bossName'], BozzRecruiterModel.title == doc['bossTitle'])
+            BozzRecruiterModel.name == doc['bossName'],
+            BozzRecruiterModel.title == doc['bossTitle'], BozzRecruiterModel.company_id == company.id)
         parsed_recruiter = parse_each_recruiter(doc)
         parsed_recruiter['company_id'] = company.id
-        if recruiter:
+        if not recruiter:
             parsed_recruiter['created'] = doc['crawl_time']
         recruiter_model = BozzRecruiterModel.dict2model(parsed_recruiter, recruiter)
         recruiter_model.save()

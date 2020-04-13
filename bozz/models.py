@@ -1,4 +1,4 @@
-from sqlalchemy import Column, VARCHAR, INTEGER, TEXT, JSON, TIMESTAMP, SMALLINT, FLOAT
+from sqlalchemy import Column, VARCHAR, INTEGER, TEXT, JSON, TIMESTAMP, SMALLINT, FLOAT, UniqueConstraint
 from configs.connector import BaseModel
 
 from model import Mixin
@@ -7,6 +7,10 @@ from model import Mixin
 
 class BozzCompanyModel(Mixin, BaseModel):
     __tablename__ = 'bozz_company'
+    __table_args__ = (
+        UniqueConstraint("source_id"),
+    )
+
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     source_id = Column(VARCHAR(32), index=True, nullable=False)
     name = Column(VARCHAR(64), index=True, nullable=False)
@@ -39,6 +43,10 @@ class BozzCompanyModel(Mixin, BaseModel):
 
 class BozzRecruiterModel(Mixin, BaseModel):
     __tablename__ = "bozz_recruiter"
+    __table_args__ = (
+        UniqueConstraint("name", "title", "company_id"),
+    )
+
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     # source_id = Column(VARCHAR(32), index=True, nullable=False)
     name = Column(VARCHAR(64), index=True, nullable=False)
@@ -51,6 +59,10 @@ class BozzRecruiterModel(Mixin, BaseModel):
 
 class BozzJobModel(Mixin, BaseModel):
     __tablename__ = "bozz_job"
+    __table_args__ = (
+        UniqueConstraint("source_id"),
+    )
+
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     source_id = Column(VARCHAR(32), index=True, nullable=False)
     name = Column(VARCHAR(64), index=True, nullable=False)
