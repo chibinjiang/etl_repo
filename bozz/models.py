@@ -35,3 +35,37 @@ class BozzCompanyModel(Mixin, BaseModel):
     tag_rotate_relax = Column(SMALLINT, index=True)  # 默认不
     created = Column(TIMESTAMP, nullable=False, index=True)
     updated = Column(TIMESTAMP, nullable=False, index=True)
+
+
+class BozzRecruiterModel(Mixin, BaseModel):
+    __tablename__ = "bozz_recruiter"
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
+    # source_id = Column(VARCHAR(32), index=True, nullable=False)
+    name = Column(VARCHAR(64), index=True, nullable=False)
+    title = Column(VARCHAR(24))  # 头衔
+    company_id = Column(INTEGER, index=True, nullable=False)
+    avatar_url = Column(TEXT)
+    created = Column(TIMESTAMP, nullable=False, index=True)
+    updated = Column(TIMESTAMP, nullable=False, index=True)
+
+
+class BozzJobModel(Mixin, BaseModel):
+    __tablename__ = "bozz_job"
+    id = Column(INTEGER, primary_key=True, autoincrement=True)
+    source_id = Column(VARCHAR(32), index=True, nullable=False)
+    name = Column(VARCHAR(64), index=True, nullable=False)
+    company_id = Column(INTEGER, index=True, nullable=False)
+    recruiter_id = Column(INTEGER, index=True, nullable=False)
+    degree_require = Column(VARCHAR(8))
+    description = Column(TEXT)
+    min_experience = Column(INTEGER, index=True)
+    max_experience = Column(INTEGER, index=True)
+    min_salary = Column(INTEGER, index=True)
+    max_salary = Column(INTEGER, index=True)
+    labels = Column(JSON)
+    valid_status = Column(INTEGER, index=True)
+    city = Column(VARCHAR(16))
+    district = Column(VARCHAR(16))
+    business = Column(VARCHAR(16))  # 商圈
+    created = Column(TIMESTAMP, nullable=False, index=True)
+    updated = Column(TIMESTAMP, nullable=False, index=True)

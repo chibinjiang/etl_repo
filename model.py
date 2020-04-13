@@ -81,6 +81,15 @@ class Mixin(object):
             columns.append(i.name)
         return columns
 
+    @classmethod
+    def dict2model(cls, d, model=None):
+        model = model or cls()
+        for attr in d:
+            if not hasattr(model, attr):
+                raise Exception("{} has no such attr: {}".format(cls.__tablename__, attr))
+            setattr(model, attr, d[attr])
+        return model
+
     def to_json(self):
         json_data = dict()
         for column in self.columns:

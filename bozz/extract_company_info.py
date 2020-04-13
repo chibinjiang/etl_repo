@@ -82,7 +82,7 @@ def extract_company():
         parse_doc = process_each_company(doc)
         if not model:
             parse_doc['created'] = doc['crawl_time']
-        model = dict2model(parse_doc, BozzCompanyModel, model)
+        model = BozzCompanyModel.dict2model(parse_doc, model)
         if not model.save():
             raise Exception("Stop")
 
