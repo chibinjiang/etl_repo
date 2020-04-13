@@ -87,7 +87,6 @@ class Mixin(object):
             json_data[column] = getattr(self, column)
         return json_data
 
-
 @catch_db_exc(default=False, rollback=True)
 def save_batch(model_list):
     session.add_all(model_list)

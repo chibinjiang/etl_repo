@@ -3,6 +3,7 @@ from zhihu.models import *
 from anime.models import *
 from github.models import GithubRepoModel, GithubTopicModel
 from ziroom.models import ZiroomRentalModel, CommunityModel
+from bozz.models import BozzCompanyModel
 
 
 def init_database():
