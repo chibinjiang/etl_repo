@@ -96,8 +96,14 @@ class Mixin(object):
             json_data[column] = getattr(self, column)
         return json_data
 
+
 @catch_db_exc(default=False, rollback=True)
-def save_batch(model_list):
-    session.add_all(model_list)
-    session.commit()
+def save_batch(model_list, chunk_size=2000):
+    def chunks(lst, n):
+        for i in range(0, len(lst), n):
+            yield lst[i:i + n]
+    for i, chunk in enumerate(chunks(model_list, chunk_size)):
+        session.add_all(chunk)
+        session.commit()
+        print(f"Epoch: {i+1}")
     return True
