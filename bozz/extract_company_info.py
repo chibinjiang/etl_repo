@@ -1,6 +1,9 @@
 import re
 import sys
+from datetime import datetime
+
 from configs.connector import mongo_db
+from model import save_batch
 from .models import BozzCompanyModel
 
 
@@ -66,13 +69,14 @@ def process_each_company(doc):
     data['stage'] = doc['stageName']
     data['industry'] = doc['industryName']
     data['logo'] = doc['logo']
-    data['updated'] = doc['crawl_time']
-    # data['created'] = datetime.utcnow()
+    data['created'] = doc['crawl_time']
+    data['updated'] = datetime.utcnow()
     return data
 
 
 def extract_company():
     valid_cond = {}
+    models = list()
     bozz_company = mongo_db['bozz_company']
     company_list = bozz_company.find(valid_cond)
     for i, doc in enumerate(company_list):
@@ -80,11 +84,12 @@ def extract_company():
         sys.stdout.flush()
         model = BozzCompanyModel.get_by(BozzCompanyModel.source_id==doc['encryptBrandId'])
         parse_doc = process_each_company(doc)
-        if not model:
-            parse_doc['created'] = doc['crawl_time']
+        # if not model:
         model = BozzCompanyModel.dict2model(parse_doc, model)
-        if not model.save():
-            raise Exception("Stop")
+        models.append(model)
+        # if not model.save():
+        #     raise Exception("Stop")
+    save_batch(models)
 
 
 if __name__ == '__main__':

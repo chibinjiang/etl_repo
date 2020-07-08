@@ -1,6 +1,7 @@
 import re
 import sys
 import traceback
+from datetime import datetime
 
 from configs.connector import mongo_db
 from model import save_batch
@@ -43,7 +44,8 @@ def parse_each_recruiter(doc):
     data['name'] = doc['bossName']
     data['title'] = doc['bossTitle']
     data['avatar_url'] = doc['bossAvatar']
-    data['updated'] = doc['crawl_time']
+    data['created'] = doc['crawl_time']
+    data['updated'] = datetime.utcnow()
     return data
 
 
@@ -74,10 +76,7 @@ def extract_job():
             parsed_job = parse_each_job(doc)
             parsed_job['company_id'] = company.id
             parsed_job['recruiter_id'] = recruiter_model.id
-            # if not job:
-            parsed_job['created'] = doc['crawl_time']
             job_model = BozzJobModel.dict2model(parsed_job, job)
-            # job_model.save()
             models.append(job_model)
         except Exception as e:
             traceback.print_exc()
