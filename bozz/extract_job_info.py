@@ -70,6 +70,8 @@ def extract_job():
         if not company:
             company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'], BozzCompanyModel.logo == doc['brandLogo'])
         if not company:
+            company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'])
+        if not company:
             print("No such company: {}".format(doc['brandName']))
             continue
         # recruiter
