@@ -92,8 +92,9 @@ def extract_company():
         parse_doc = process_each_company(doc)
         model = BozzCompanyModel.dict2model(parse_doc, model)
         models.append(model)
-        save_batch(models, chunk_size=batch_size)
-        models = list()
+        if len(models) == batch_size:
+            save_batch(models, chunk_size=batch_size)
+            models = list()
 
 
 if __name__ == '__main__':
