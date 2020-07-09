@@ -88,9 +88,8 @@ def extract_job():
             parsed_job['recruiter_id'] = recruiter_model.id
             job_model = BozzJobModel.dict2model(parsed_job, job)
             models.append(job_model)
-            if len(models) == batch_size:
-                save_batch(models, chunk_size=batch_size)
-                models = list()
+            save_batch(models, chunk_size=batch_size)
+            models = list()
         except Exception as e:
             traceback.print_exc()
 
