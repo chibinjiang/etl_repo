@@ -52,6 +52,7 @@ def parse_each_recruiter(doc):
 def extract_job():
     valid_cond = {}
     models = list()
+    batch_size = 1000
     bozz_company = mongo_db['bozz_job']
     company_list = bozz_company.find(valid_cond)
     for i, doc in enumerate(company_list):
@@ -78,9 +79,11 @@ def extract_job():
             parsed_job['recruiter_id'] = recruiter_model.id
             job_model = BozzJobModel.dict2model(parsed_job, job)
             models.append(job_model)
+            if len(models) == batch_size:
+                save_batch(models, chunk_size=batch_size)
+                models = list()
         except Exception as e:
             traceback.print_exc()
-    save_batch(models)
 
 
 if __name__ == '__main__':

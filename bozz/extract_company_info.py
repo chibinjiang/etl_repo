@@ -76,6 +76,7 @@ def process_each_company(doc):
 
 def extract_company():
     valid_cond = {}
+    batch_size = 1000
     models = list()
     bozz_company = mongo_db['bozz_company']
     company_list = bozz_company.find(valid_cond)
@@ -87,9 +88,9 @@ def extract_company():
         # if not model:
         model = BozzCompanyModel.dict2model(parse_doc, model)
         models.append(model)
-        # if not model.save():
-        #     raise Exception("Stop")
-    save_batch(models)
+        if len(models) == batch_size:
+            save_batch(models, chunk_size=batch_size)
+            models = list()
 
 
 if __name__ == '__main__':
