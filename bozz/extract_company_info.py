@@ -95,6 +95,8 @@ def extract_company():
         if len(models) == batch_size:
             save_batch(models, chunk_size=batch_size)
             models = list()
+    if models:
+        save_batch(models, chunk_size=batch_size)
 
 
 if __name__ == '__main__':
