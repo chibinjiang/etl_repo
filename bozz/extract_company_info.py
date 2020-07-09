@@ -78,14 +78,18 @@ def extract_company():
     valid_cond = {}
     batch_size = 1000
     models = list()
+    unique_ids = list()
     bozz_company = mongo_db['bozz_company']
     company_list = bozz_company.find(valid_cond)
     for i, doc in enumerate(company_list):
         sys.stdout.write("\r{}".format(i+1))
         sys.stdout.flush()
-        model = BozzCompanyModel.get_by(BozzCompanyModel.source_id==doc['encryptBrandId'])
+        cid = doc['encryptBrandId']
+        if cid in unique_ids:
+            continue
+        unique_ids.append(cid)
+        model = BozzCompanyModel.get_by(BozzCompanyModel.source_id == cid)
         parse_doc = process_each_company(doc)
-        # if not model:
         model = BozzCompanyModel.dict2model(parse_doc, model)
         models.append(model)
         if len(models) == batch_size:

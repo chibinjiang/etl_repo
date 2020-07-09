@@ -1,9 +1,11 @@
-from configs.connector import sql_engine
-from zhihu.models import *
-from anime.models import *
+from configs.connector import sql_engine, BaseModel
+from zhihu.models import ZhihuUserModel, ZhihuArticleModel, ZhihuQuestionModel, ZhihuAnswerModel, \
+    ZhihuTopicBestAnswererMapModel, ZhihuTopicMapModel, ZhihuTopicModel
+from anime.models import AnimeAuthorBangumiMapModel, AnimeAuthorModel, AnimeBangumiModel, AnimeEpisodeModel, \
+    AnimeImageModel
 from github.models import GithubRepoModel, GithubTopicModel
 from ziroom.models import ZiroomRentalModel, CommunityModel
-from bozz.models import BozzCompanyModel, BozzJobModel
+from bozz.models import BozzCompanyModel, BozzJobModel, BozzRecruiterModel
 
 
 def init_database():
