@@ -35,7 +35,8 @@ def parse_each_job(doc):
     if nums:
         data['min_salary'] = int(nums.group(1)) * 1000
         data['max_salary'] = int(nums.group(2)) * 1000
-    data['updated'] = doc['crawl_time']
+    data['created'] = doc['crawl_time']
+    data['updated'] = datetime.utcnow()
     return data
 
 
@@ -76,8 +77,6 @@ def extract_job():
             BozzRecruiterModel.title == doc['bossTitle'], BozzRecruiterModel.company_id == company.id)
         parsed_recruiter = parse_each_recruiter(doc)
         parsed_recruiter['company_id'] = company.id
-        if not recruiter:
-            parsed_recruiter['created'] = doc['crawl_time']
         recruiter_model = BozzRecruiterModel.dict2model(parsed_recruiter, recruiter)
         recruiter_model.save()
         # job, MongoDB 中已经去重了
