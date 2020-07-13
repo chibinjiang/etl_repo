@@ -104,8 +104,11 @@ def extract_company():
 def merge_all_tags():
     tags = set()
     for model in BozzCompanyModel.query():
-        if model.welfare_list:
-            tags.update(model.welfare_list)
+        if not model.welfare_list:
+            continue
+        for tag in model.welfare_list:
+            if '上午' not in tag and '下午' not in tag:
+                tags.add(tag)
     print(tags)
 
 
