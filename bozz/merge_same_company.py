@@ -18,26 +18,31 @@ def load_duplicate_tuple():
 
 
 def query_bozz(name):
-    headers = {
-        'authority': 'www.zhipin.com',
-        'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'sec-fetch-site': 'same-origin',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-user': '?1',
-        'sec-fetch-dest': 'document',
-        'referer': 'https://www.zhipin.com/job_detail/?query=huawei&city=100010000&industry=&position=',
-        'accept-language': 'en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7',
-        'cookie': '__zp__pub__=; __c=1594642411; __g=-; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1594642412; lastCity=100010000; __l=l=%2Fwww.zhipin.com%2Fgongsir%2F4dc79c7ad647bbac0XN409m-Fg~~.html%3Fka%3Dcompany-jobs&r=&friend_source=0&friend_source=0; __a=58798900.1594642411..1594642411.8.1.8.8; __zp_stoken__=4f4faPC5UeCopAnoRXV1hAWJiBVhtL3FFUlgQNRVLKXtScT5IHlgiUiBeAGAScFoAD39CJHRKN0hEH2RVAwZUGXltd3Q0SQB5ZkIlOjJsWF9NGCd0VUREJTdOKQwJLBwdTUYHW3tDSE0JBWE%3D; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1594642821',
+    cookies = {
+        '__zp__pub__': '',
+        'Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a': '1594644343',
+        'Hm_lvt_194df3105ad7148dcf2b98a91b5e727a': '1594644343',
+        '__zp_stoken__': '4f4faPC5UeCopNwgfajxhAWJiBVhiem9MUyEQNRVLKR05Yh1FFFgiUiBeAGRmMnUXD39CJHRKNzoXF2BVGn0SOA8Xc3M6XXgUfksvRDJsWF9NGDBbFzBAJTdOKQwJJhwdTUYHW3tDSE0JBWE%3D',
+        '__a': '1077175.1594644340..1594644340.1.1.1.1',
+        '__c': '1594644340',
+        '__g': '-',
+        '__l': 'l=%2Fwww.zhipin.com%2Fjob_detail%2F%3Fquery%3D%25E4%25B9%2590%25E4%25BF%25A1%25E5%259C%25A3%25E6%2596%2587%26city%3D100010000%26industry%3D%26position%3D&r=&friend_source=0',
     }
+
+    headers = {
+        'Host': 'www.zhipin.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/7.0.14(0x17000e24) NetType/WIFI Language/en',
+        'accept-language': 'en-us',
+    }
+
     params = (
         ('query', name),
         ('city', '100010000'),
         ('industry', ''),
         ('position', ''),
     )
-    response = requests.get('https://www.zhipin.com/job_detail/', headers=headers, params=params)
+    response = requests.get('https://www.zhipin.com/job_detail/', headers=headers, params=params, cookies=cookies)
     selector = Selector(response)
     html = selector.xpath('.//div[@id="wrap"]//div[@class="company-item"]//a/@href').extract_first()
     if html:
@@ -49,7 +54,6 @@ def query_bozz(name):
 
 def main():
     name2source_ids = load_duplicate_tuple()
-    print(name2source_ids)
     for name in name2source_ids:
         print(f"Query {name}....")
         source_ids = name2source_ids[name]
