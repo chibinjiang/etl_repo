@@ -101,8 +101,17 @@ def extract_company():
         save_batch(models, chunk_size=batch_size)
 
 
+def merge_all_tags():
+    tags = set()
+    for model in BozzCompanyModel.query():
+        if model.welfare_list:
+            tags.update(model.welfare_list)
+    print(tags)
+
+
 if __name__ == '__main__':
     """
     python -m bozz.extract_company_info
     """
-    extract_company()
+    # extract_company()
+    merge_all_tags()
