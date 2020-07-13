@@ -21,15 +21,15 @@ def query_bozz(name):
     headers = {
         'authority': 'www.zhipin.com',
         'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'sec-fetch-site': 'same-origin',
         'sec-fetch-mode': 'navigate',
         'sec-fetch-user': '?1',
         'sec-fetch-dest': 'document',
-        'referer': 'https://www.zhipin.com/job_detail/?query=%E5%8C%BB%E6%B8%A1%E4%BA%91&city=100010000&industry=&position=',
+        'referer': 'https://www.zhipin.com/job_detail/?query=huawei&city=100010000&industry=&position=',
         'accept-language': 'en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7',
-        'cookie': '__zp__pub__=; __c=1594642411; __g=-; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1594642412; lastCity=100010000; __l=l=%2Fwww.zhipin.com%2Fgongsir%2F4dc79c7ad647bbac0XN409m-Fg~~.html%3Fka%3Dcompany-jobs&r=&friend_source=0&friend_source=0; __a=58798900.1594642411..1594642411.2.1.2.2; __zp_stoken__=4f4faPC5UeCopNXw1WkNhAWJiBVg%2FKzIkV1IQNRVLKWdPcT8qdFgiUiBeAAZWbUwZD39CJHRKN0hLOTtVG3sqGTkXeH87RX8SGV5eNTJsWF9NGD5iSAAiJTdOKQwJRhwdTUYHW3tDSE0JBWE%3D; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1594642423',
+        'cookie': '__zp__pub__=; __c=1594642411; __g=-; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1594642412; lastCity=100010000; __l=l=%2Fwww.zhipin.com%2Fgongsir%2F4dc79c7ad647bbac0XN409m-Fg~~.html%3Fka%3Dcompany-jobs&r=&friend_source=0&friend_source=0; __a=58798900.1594642411..1594642411.8.1.8.8; __zp_stoken__=4f4faPC5UeCopAnoRXV1hAWJiBVhtL3FFUlgQNRVLKXtScT5IHlgiUiBeAGAScFoAD39CJHRKN0hEH2RVAwZUGXltd3Q0SQB5ZkIlOjJsWF9NGCd0VUREJTdOKQwJLBwdTUYHW3tDSE0JBWE%3D; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1594642821',
     }
     params = (
         ('query', name),
@@ -55,8 +55,7 @@ def main():
         source_ids = name2source_ids[name]
         master_id = query_bozz(name)
         if not master_id:
-            print(f"No such master id: {name}")
-            continue
+            raise Exception(f"No such master id: {name}")
         for source_id in source_ids:
             model = BozzCompanyMapModel()
             model.master_id = master_id
