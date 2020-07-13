@@ -43,6 +43,8 @@ def query_bozz(name):
         ('position', ''),
     )
     response = requests.get('https://www.zhipin.com/job_detail/', headers=headers, params=params, cookies=cookies)
+    if len(response.text) < 51402:
+        raise Exception("被发现了!")
     selector = Selector(response)
     html = selector.xpath('.//div[@id="wrap"]//div[@class="company-item"]//a/@href').extract_first()
     if html:
@@ -59,7 +61,7 @@ def main():
         source_ids = name2source_ids[name]
         master_id = query_bozz(name)
         if not master_id:
-            raise Exception(f"No such master id: {name}")
+            print(f"No such master id: {name}")
         for source_id in source_ids:
             model = BozzCompanyMapModel()
             model.master_id = master_id
