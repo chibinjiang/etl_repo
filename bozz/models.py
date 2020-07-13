@@ -1,8 +1,19 @@
-from sqlalchemy import Column, VARCHAR, INTEGER, TEXT, JSON, TIMESTAMP, SMALLINT, FLOAT, UniqueConstraint
+from sqlalchemy import Column, VARCHAR, INTEGER, TEXT, JSON, TIMESTAMP, SMALLINT, PrimaryKeyConstraint, UniqueConstraint
 from configs.connector import BaseModel
 
 from model import Mixin
 # 华为云的pg 不支持postgis, 除非提工单
+
+
+class BozzCompanyMapModel(Mixin, BaseModel):
+    __tablename__ = 'bozz_company_map'
+    __table_args__ = (
+        PrimaryKeyConstraint("master_id", "replica_id"),
+    )
+    master_id = Column(INTEGER, index=True, nullable=False)
+    replica_id = Column(VARCHAR(32), index=True, nullable=False)
+    created = Column(TIMESTAMP, nullable=False, index=True)
+    updated = Column(TIMESTAMP, nullable=False, index=True)
 
 
 class BozzCompanyModel(Mixin, BaseModel):

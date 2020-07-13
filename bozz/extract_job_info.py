@@ -1,7 +1,8 @@
 import re
 import sys
-import traceback
 from datetime import datetime
+
+from pymongo import DESCENDING
 
 from configs.connector import mongo_db
 from model import save_batch
@@ -55,9 +56,9 @@ def extract_job():
     models = list()
     batch_size = 5000
     unique_ids = list()
-    bozz_company = mongo_db['bozz_job']
-    company_list = bozz_company.find(valid_cond)
-    for i, doc in enumerate(company_list):
+    bozz_job = mongo_db['bozz_job']
+    job_list = bozz_job.find(valid_cond).sort([('crawl_time', DESCENDING)])
+    for i, doc in enumerate(job_list):
         sys.stdout.write("\r{}".format(i+1))
         sys.stdout.flush()
         jid = doc['encryptJobId']
@@ -69,8 +70,8 @@ def extract_job():
             company = BozzCompanyModel.get_by(BozzCompanyModel.source_id == doc.get('encryptBrandId'))
         if not company:
             company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'], BozzCompanyModel.logo == doc['brandLogo'])
-        if not company:
-            company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'])
+        # if not company:
+        #     company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'])
         if not company:
             print("No such company: {}".format(doc['brandName']))
             continue

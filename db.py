@@ -5,7 +5,7 @@ from anime.models import AnimeAuthorBangumiMapModel, AnimeAuthorModel, AnimeBang
     AnimeImageModel
 from github.models import GithubRepoModel, GithubTopicModel
 from ziroom.models import ZiroomRentalModel, CommunityModel
-from bozz.models import BozzCompanyModel, BozzJobModel, BozzRecruiterModel
+from bozz.models import BozzCompanyModel, BozzJobModel, BozzRecruiterModel, BozzCompanyMapModel
 
 
 def init_database():
