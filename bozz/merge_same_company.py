@@ -5,7 +5,6 @@ from scrapy import Selector
 from collections import defaultdict
 from bozz.models import BozzCompanyMapModel, BozzCompanyModel
 
-
 def load_duplicate_tuple():
     name2source_ids = defaultdict(list)
     for model in BozzCompanyModel.query():
@@ -30,7 +29,7 @@ def query_bozz(name):
         'sec-fetch-dest': 'document',
         'referer': 'https://www.zhipin.com/job_detail/?query=%E5%8C%BB%E6%B8%A1%E4%BA%91&city=100010000&industry=&position=',
         'accept-language': 'en,zh-CN;q=0.9,zh;q=0.8,ja;q=0.7',
-        'cookie': '__zp__pub__=; __c=1594053777; __g=-; t=uhIdpv3QMnz843s; wt=uhIdpv3QMnz843s; __l=l=%2Flogin.zhipin.com%2F&r=https%3A%2F%2Fwww.zhipin.com%2Fgongsir%2F4dc79c7ad647bbac0XN409m-Fg~~.html%3Fka%3Dcompany-jobs&friend_source=0&friend_source=0; _bl_uid=XIkRXchea3kqnhh6pcyjnsUe9I2I; __zp__pub__=; __zp_seo_uuid__=540cae3e-52e2-4fac-a7dd-55de60e9753c; lastCity=100010000; __a=68411834.1590144204.1590144204.1594053777.58.2.52.58; __zp_stoken__=58b9aAH5fRE8VGlIqAiZUUF0EegdzI09mWhB3A1BPeExiZFFZcVFUf0NPUSYCO1RdAkcSGCsUf3QJBllVNFRTM1McNxgvUhRDDAJmMHNqJktMICFZQWoeAyYtc2Y%2BHAMWQH5XZyQ8VH5LRyU%3D',
+        'cookie': '__zp__pub__=; __c=1594642411; __g=-; Hm_lvt_194df3105ad7148dcf2b98a91b5e727a=1594642412; lastCity=100010000; __l=l=%2Fwww.zhipin.com%2Fgongsir%2F4dc79c7ad647bbac0XN409m-Fg~~.html%3Fka%3Dcompany-jobs&r=&friend_source=0&friend_source=0; __a=58798900.1594642411..1594642411.2.1.2.2; __zp_stoken__=4f4faPC5UeCopNXw1WkNhAWJiBVg%2FKzIkV1IQNRVLKWdPcT8qdFgiUiBeAAZWbUwZD39CJHRKN0hLOTtVG3sqGTkXeH87RX8SGV5eNTJsWF9NGD5iSAAiJTdOKQwJRhwdTUYHW3tDSE0JBWE%3D; Hm_lpvt_194df3105ad7148dcf2b98a91b5e727a=1594642423',
     }
     params = (
         ('query', name),
@@ -65,7 +64,7 @@ def main():
             model.created = datetime.utcnow()
             model.updated = datetime.utcnow()
             model.save()
-        time.sleep(1)
+        time.sleep(5)
 
 
 if __name__ == '__main__':

@@ -2,6 +2,8 @@ import re
 import sys
 from datetime import datetime
 
+from pymongo import DESCENDING
+
 from configs.connector import mongo_db
 from model import save_batch
 from .models import BozzCompanyModel
@@ -80,7 +82,7 @@ def extract_company():
     models = list()
     unique_ids = list()
     bozz_company = mongo_db['bozz_company']
-    company_list = bozz_company.find(valid_cond)
+    company_list = bozz_company.find(valid_cond).sort([('crawl_time', DESCENDING)])
     for i, doc in enumerate(company_list):
         sys.stdout.write("\r{}".format(i+1))
         sys.stdout.flush()
