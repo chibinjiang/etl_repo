@@ -52,13 +52,13 @@ def parse_each_recruiter(doc):
     return data
 
 
-def extract_job():
+def extract_job(skip, size):
     valid_cond = {}
     models = list()
     batch_size = 5000
     unique_ids = list()
     bozz_job = mongo_db['bozz_job']
-    job_list = bozz_job.find(valid_cond).sort([('crawl_time', DESCENDING)])
+    job_list = bozz_job.find(valid_cond).sort([('crawl_time', DESCENDING)]).skip(skip).limit(size)
     for i, doc in enumerate(job_list):
         sys.stdout.write("\r{}".format(i+1))
         sys.stdout.flush()
@@ -98,10 +98,19 @@ def extract_job():
             models = list()
     if models:
         save_batch(models, chunk_size=batch_size)
+    return models
 
 
 if __name__ == '__main__':
     """
     python -m bozz.extract_job_info
     """
-    extract_job()
+    offset = 0
+    limit = 100000
+    while True:
+        print(f"Offset: {offset}; Limit: {limit}")
+        models = extract_job(offset, limit)
+        if len(models) < limit:
+            print(f"Stop on: {len(models)}")
+            break
+        offset += limit
