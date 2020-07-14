@@ -32,10 +32,11 @@ def parse_each_job(doc):
         data['min_experience'], data['max_experience'] = 0, 1
     if '应届生' == doc.get('jobExperience'):
         data['min_experience'], data['max_experience'] = 0, 0
-    nums = re.search("(\d+)-(\d+)", doc.get('salaryDesc') or '')
+    salary_desc = doc.get('salaryDesc') or ''
+    nums = re.search("(\d+)-(\d+)", salary_desc)
     if nums:
-        data['min_salary'] = int(nums.group(1)) * 1000
-        data['max_salary'] = int(nums.group(2)) * 1000
+        data['min_salary'] = int(nums.group(1)) if '天' in salary_desc else int(nums.group(1)) * 1000
+        data['max_salary'] = int(nums.group(2)) if '天' in salary_desc else int(nums.group(2)) * 1000
     data['created'] = doc['crawl_time']
     data['updated'] = datetime.utcnow()
     return data
@@ -70,8 +71,8 @@ def extract_job():
             company = BozzCompanyModel.get_by(BozzCompanyModel.source_id == doc.get('encryptBrandId'))
         if not company:
             company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'], BozzCompanyModel.logo == doc['brandLogo'])
-        # if not company:
-        #     company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'])
+        if not company:
+            company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'])
         if not company:
             print("No such company: {}".format(doc['brandName']))
             continue

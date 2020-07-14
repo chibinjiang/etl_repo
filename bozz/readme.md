@@ -2,7 +2,7 @@
 
 ### Pre-processing 
 - Merge Company using Boss Search
-
+- 聚类
 ### Visualization
 - Numbers: 
     - Total Job Count
