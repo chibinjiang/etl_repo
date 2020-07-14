@@ -78,7 +78,7 @@ def process_each_company(doc):
 
 def extract_company():
     valid_cond = {}
-    batch_size = 1000
+    batch_size = 5000
     models = list()
     unique_ids = list()
     bozz_company = mongo_db['bozz_company']

@@ -2,6 +2,7 @@ import re
 import sys
 from datetime import datetime
 
+from freestyle_utils.decorators.toolbox import timeit
 from pymongo import DESCENDING
 
 from configs.connector import mongo_db
@@ -52,6 +53,7 @@ def parse_each_recruiter(doc):
     return data
 
 
+@timeit
 def extract_job(skip, size):
     valid_cond = {}
     models = list()
