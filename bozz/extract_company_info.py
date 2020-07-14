@@ -116,5 +116,5 @@ if __name__ == '__main__':
     """
     python -m bozz.extract_company_info
     """
-    # extract_company()
-    merge_all_tags()
+    extract_company()
+    # merge_all_tags()
