@@ -100,7 +100,7 @@ def extract_job(skip, size):
             models = list()
     if models:
         save_batch(models, chunk_size=batch_size)
-    return models
+    return len(job_list)
 
 
 if __name__ == '__main__':
@@ -111,8 +111,8 @@ if __name__ == '__main__':
     limit = 100000
     while True:
         print(f"Offset: {offset}; Limit: {limit}")
-        models = extract_job(offset, limit)
-        if len(models) < limit:
-            print(f"Stop on: {len(models)}")
+        l = extract_job(offset, limit)
+        if l < limit:
+            print(f"Stop on: {l}")
             break
         offset += limit
