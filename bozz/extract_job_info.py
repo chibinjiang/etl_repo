@@ -100,7 +100,7 @@ def extract_job(skip, size):
             models = list()
     if models:
         save_batch(models, chunk_size=batch_size)
-    return len(job_list)
+    return i+1
 
 
 if __name__ == '__main__':
