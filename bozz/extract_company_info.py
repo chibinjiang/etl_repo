@@ -25,8 +25,6 @@ def parse_welfare_list(doc, welfares):
             doc['work_days'] = 5.5
         if '排班轮休' in tag:
             doc['tag_rotate_relax'] = TagValue.Yes
-        else:
-            doc['tag_rotate_relax'] = TagValue.No
         if '股票期权' in tag:
             doc['tag_stock_inspire'] = TagValue.Yes
         if '年终奖' in tag:
