@@ -55,6 +55,9 @@ def parse_each_recruiter(doc):
 
 @timeit
 def extract_job(skip, size):
+    """
+    预处理的速度奇慢
+    """
     valid_cond = {}
     models = list()
     batch_size = 5000
