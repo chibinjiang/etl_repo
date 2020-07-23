@@ -74,13 +74,13 @@ def process_each_company(doc):
     return data
 
 
-def extract_company():
+def extract_company(skip, size):
     valid_cond = {}
     batch_size = 5000
     models = list()
     unique_ids = list()
     bozz_company = mongo_db['bozz_company']
-    company_list = bozz_company.find(valid_cond).sort([('crawl_time', DESCENDING)])
+    company_list = bozz_company.find(valid_cond).sort([('crawl_time', DESCENDING)]).skip(skip).limit(size)
     for i, doc in enumerate(company_list):
         sys.stdout.write("\r{}".format(i+1))
         sys.stdout.flush()
@@ -97,6 +97,7 @@ def extract_company():
             models = list()
     if models:
         save_batch(models, chunk_size=batch_size)
+    return i+1
 
 
 def merge_all_tags():
@@ -114,5 +115,12 @@ if __name__ == '__main__':
     """
     python -m bozz.extract_company_info
     """
-    extract_company()
-    # merge_all_tags()
+    offset = 0
+    limit = 100000
+    while True:
+        print(f"Offset: {offset}; Limit: {limit}")
+        l = extract_company(offset, limit)
+        if l < limit:
+            print(f"Stop on: {l}")
+            break
+        offset += limit
