@@ -2,6 +2,7 @@ import re
 import sys
 from datetime import datetime
 
+from freestyle_utils.decorators.toolbox import timeit
 from pymongo import DESCENDING
 
 from configs.connector import mongo_db
@@ -74,6 +75,7 @@ def process_each_company(doc):
     return data
 
 
+@timeit
 def extract_company(skip, size):
     valid_cond = {}
     batch_size = 5000
