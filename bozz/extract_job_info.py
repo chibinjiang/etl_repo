@@ -34,10 +34,13 @@ def parse_each_job(doc):
     if '应届生' == doc.get('jobExperience'):
         data['min_experience'], data['max_experience'] = 0, 0
     salary_desc = doc.get('salaryDesc') or ''
+    by_date = '天' in salary_desc
+    doc['salary_text'] = salary_desc
+    doc['salary_unit'] = BozzJobModel.SalaryUnit.Date if by_date else BozzJobModel.SalaryUnit.Month
     nums = re.search("(\d+)-(\d+)", salary_desc)
     if nums:
-        data['min_salary'] = int(nums.group(1)) if '天' in salary_desc else int(nums.group(1)) * 1000
-        data['max_salary'] = int(nums.group(2)) if '天' in salary_desc else int(nums.group(2)) * 1000
+        data['min_salary'] = int(nums.group(1)) if by_date else int(nums.group(1)) * 1000
+        data['max_salary'] = int(nums.group(2)) if by_date else int(nums.group(2)) * 1000
     data['created'] = doc['crawl_time']
     data['updated'] = datetime.utcnow()
     return data

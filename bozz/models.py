@@ -75,6 +75,10 @@ class BozzJobModel(Mixin, BaseModel):
         UniqueConstraint("source_id"),
     )
 
+    class SalaryUnit(object):
+        Date = 'per_date'
+        Month = 'per_month'
+
     id = Column(INTEGER, primary_key=True, autoincrement=True)
     source_id = Column(VARCHAR(32), index=True, nullable=False)
     name = Column(VARCHAR(64), index=True, nullable=False)
@@ -82,6 +86,8 @@ class BozzJobModel(Mixin, BaseModel):
     recruiter_id = Column(INTEGER, index=True, nullable=False)
     degree_require = Column(VARCHAR(8))
     description = Column(TEXT)
+    salary_text = Column(TEXT)
+    salary_unit = Column(VARCHAR(16))
     min_experience = Column(INTEGER, index=True)
     max_experience = Column(INTEGER, index=True)
     min_salary = Column(INTEGER, index=True)
