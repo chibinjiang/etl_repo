@@ -98,21 +98,11 @@ def extract_job(skip, size):
         company_id = match_company(doc.get('encryptBrandId'), doc.get('brandName'), doc.get('brandLogo'))
         if not company_id:
             continue
-        # recruiter
-        recruiter = BozzRecruiterModel.get_by(
-            BozzRecruiterModel.name == doc['bossName'],
-            BozzRecruiterModel.title == doc['bossTitle'],
-            BozzRecruiterModel.company_id == company_id
-        )
-        parsed_recruiter = parse_each_recruiter(doc)
-        parsed_recruiter['company_id'] = company_id
-        recruiter_model = BozzRecruiterModel.dict2model(parsed_recruiter, recruiter)
-        recruiter_model.save()
         # job, MongoDB 中已经去重了
         job = BozzJobModel.get_by(BozzJobModel.source_id == jid)
         parsed_job = parse_each_job(doc)
         parsed_job['company_id'] = company_id
-        parsed_job['recruiter_id'] = recruiter_model.id
+        # parsed_job['recruiter_id'] = recruiter_model.id
         job_model = BozzJobModel.dict2model(parsed_job, job)
         models.append(job_model)
         if len(models) == batch_size:
