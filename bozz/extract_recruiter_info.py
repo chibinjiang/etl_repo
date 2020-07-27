@@ -1,9 +1,10 @@
 import sys
 from datetime import datetime
+from pymongo import MongoClient
+from private_configs import config
 from freestyle_utils.decorators.toolbox import timeit, cache_by_redis
 from configs.connector import mongo_db
 from .models import BozzRecruiterModel, BozzCompanyModel
-
 
 
 def parse_each_recruiter(doc):
@@ -35,6 +36,9 @@ def extract_recruiter(brand_name):
     """
     预处理的速度奇慢
     """
+    print(f"处理{brand_name}的招聘者")
+    client = MongoClient(config.mongo_uri)
+    mongo_db = client[config.mgd_db]
     bozz_job = mongo_db['bozz_job']
     recruiter_list = bozz_job.aggregate([
         {'$match': {'brandName': brand_name}},
@@ -65,13 +69,10 @@ def extract_recruiter(brand_name):
 if __name__ == '__main__':
     """
     python -m bozz.extract_recruiter_info
-    怎么把 ETL的速度提升呢
+    怎么把 ETL的速度提升呢: 如何 并发呢 ?
     """
     bozz_company = mongo_db['bozz_company']
     names = list(bozz_company.distinct('name'))[:16]
     from concurrent.futures import ProcessPoolExecutor
     with ProcessPoolExecutor(max_workers=4) as exe:
         exe.map(extract_recruiter, names)
-    # for company_name in :
-    #     print(f"处理{company_name}的招聘者")
-    #     extract_recruiter(company_name)
