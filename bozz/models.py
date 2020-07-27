@@ -87,6 +87,7 @@ class BozzJobModel(Mixin, BaseModel):
     degree_require = Column(VARCHAR(8))
     description = Column(TEXT)
     salary_text = Column(TEXT)
+    total_salary_months = Column(INTEGER)
     salary_unit = Column(VARCHAR(16))
     min_experience = Column(INTEGER, index=True)
     max_experience = Column(INTEGER, index=True)

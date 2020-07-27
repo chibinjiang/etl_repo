@@ -41,6 +41,9 @@ def parse_each_job(doc):
     if nums:
         data['min_salary'] = int(nums.group(1)) if by_date else int(nums.group(1)) * 1000
         data['max_salary'] = int(nums.group(2)) if by_date else int(nums.group(2)) * 1000
+    total_salary_months = re.search('(\d+)薪', salary_desc)
+    if total_salary_months:
+        data['total_salary_months'] = int(total_salary_months.group(1))
     data['created'] = doc['crawl_time']
     data['updated'] = datetime.utcnow()
     return data
