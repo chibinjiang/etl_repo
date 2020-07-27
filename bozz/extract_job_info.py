@@ -2,7 +2,7 @@ import re
 import sys
 from datetime import datetime
 
-from freestyle_utils.decorators.toolbox import timeit
+from freestyle_utils.decorators.toolbox import timeit, cache_by_redis
 from pymongo import DESCENDING
 
 from configs.connector import mongo_db
@@ -59,6 +59,24 @@ def parse_each_recruiter(doc):
     return data
 
 
+@cache_by_redis(3600)
+def match_company(source_id=None, name=None, logo=None):
+    company = None
+    if source_id:
+        company = BozzCompanyModel.get_by(BozzCompanyModel.source_id == source_id)
+    if not company and name and logo:
+        company = BozzCompanyModel.get_by(BozzCompanyModel.name == name, BozzCompanyModel.logo == logo)
+    if not company and name:
+        company = BozzCompanyModel.get_by(BozzCompanyModel.name == name)
+    if not company:
+        print("No such company: {}".format(name))
+    return company.id
+
+
+def match_recruiter(name, title, company):
+    pass
+
+
 @timeit
 def extract_job(skip, size):
     """
@@ -66,7 +84,7 @@ def extract_job(skip, size):
     """
     valid_cond = {}
     models = list()
-    batch_size = 5000
+    batch_size = 50# 00
     unique_ids = list()
     bozz_job = mongo_db['bozz_job']
     job_list = bozz_job.find(valid_cond).sort([('crawl_time', DESCENDING)]).skip(skip).limit(size)
@@ -77,30 +95,23 @@ def extract_job(skip, size):
         if jid in unique_ids:
             continue
         unique_ids.append(jid)
-        company = None
-        if 'encryptBrandId' in doc:
-            company = BozzCompanyModel.get_by(BozzCompanyModel.source_id == doc.get('encryptBrandId'))
-        if not company:
-            company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'], BozzCompanyModel.logo == doc['brandLogo'])
-        if not company:
-            company = BozzCompanyModel.get_by(BozzCompanyModel.name == doc['brandName'])
-        if not company:
-            print("No such company: {}".format(doc['brandName']))
+        company_id = match_company(doc.get('encryptBrandId'), doc.get('brandName'), doc.get('brandLogo'))
+        if not company_id:
             continue
         # recruiter
         recruiter = BozzRecruiterModel.get_by(
             BozzRecruiterModel.name == doc['bossName'],
             BozzRecruiterModel.title == doc['bossTitle'],
-            BozzRecruiterModel.company_id == company.id
+            BozzRecruiterModel.company_id == company_id
         )
         parsed_recruiter = parse_each_recruiter(doc)
-        parsed_recruiter['company_id'] = company.id
+        parsed_recruiter['company_id'] = company_id
         recruiter_model = BozzRecruiterModel.dict2model(parsed_recruiter, recruiter)
         recruiter_model.save()
         # job, MongoDB 中已经去重了
         job = BozzJobModel.get_by(BozzJobModel.source_id == jid)
         parsed_job = parse_each_job(doc)
-        parsed_job['company_id'] = company.id
+        parsed_job['company_id'] = company_id
         parsed_job['recruiter_id'] = recruiter_model.id
         job_model = BozzJobModel.dict2model(parsed_job, job)
         models.append(job_model)
