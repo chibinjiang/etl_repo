@@ -35,8 +35,8 @@ def parse_each_job(doc):
         data['min_experience'], data['max_experience'] = 0, 0
     salary_desc = doc.get('salaryDesc') or ''
     by_date = '天' in salary_desc
-    doc['salary_text'] = salary_desc
-    doc['salary_unit'] = BozzJobModel.SalaryUnit.Date if by_date else BozzJobModel.SalaryUnit.Month
+    data['salary_text'] = salary_desc
+    data['salary_unit'] = BozzJobModel.SalaryUnit.Date if by_date else BozzJobModel.SalaryUnit.Month
     nums = re.search("(\d+)-(\d+)", salary_desc)
     if nums:
         data['min_salary'] = int(nums.group(1)) if by_date else int(nums.group(1)) * 1000
@@ -112,6 +112,7 @@ def extract_job(skip, size):
 if __name__ == '__main__':
     """
     python -m bozz.extract_job_info
+    怎么把 ETL的速度提升呢
     """
     offset = 0
     limit = 100000
