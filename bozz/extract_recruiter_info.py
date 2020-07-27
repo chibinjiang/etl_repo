@@ -1,10 +1,6 @@
-import re
 import sys
 from datetime import datetime
-
 from freestyle_utils.decorators.toolbox import timeit, cache_by_redis
-from pymongo import DESCENDING
-
 from configs.connector import mongo_db
 from .models import BozzRecruiterModel, BozzCompanyModel
 
@@ -35,13 +31,13 @@ def match_company(source_id=None, name=None, logo=None):
 
 
 @timeit
-def extract_recruiter(company_name):
+def extract_recruiter(brand_name):
     """
     预处理的速度奇慢
     """
     bozz_job = mongo_db['bozz_job']
     recruiter_list = bozz_job.aggregate([
-        {'$match': {'brandName': company_name}},
+        {'$match': {'brandName': brand_name}},
         {'$group': {'_id': {
             'bossName': '$bossName', 'bossTitle': '$bossTitle', 'encryptBrandId': '$encryptBrandId',
             'brandName': '$brandName', 'brandLogo': '$brandLogo'
@@ -72,6 +68,10 @@ if __name__ == '__main__':
     怎么把 ETL的速度提升呢
     """
     bozz_company = mongo_db['bozz_company']
-    for company_name in bozz_company.distinct('name'):
-        print(f"处理{company_name}的招聘者")
-        extract_recruiter(company_name)
+    names = list(bozz_company.distinct('name'))[:16]
+    from concurrent.futures import ProcessPoolExecutor
+    with ProcessPoolExecutor(max_workers=4) as exe:
+        exe.map(extract_recruiter, names)
+    # for company_name in :
+    #     print(f"处理{company_name}的招聘者")
+    #     extract_recruiter(company_name)

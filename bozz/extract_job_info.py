@@ -113,6 +113,13 @@ def extract_job(skip, size):
     return i+1
 
 
+def update_company_id():
+    pass
+
+def update_recruiter_id():
+    pass
+
+
 if __name__ == '__main__':
     """
     python -m bozz.extract_job_info
