@@ -84,7 +84,7 @@ def extract_job(skip, size):
     """
     valid_cond = {}
     models = list()
-    batch_size = 50# 00
+    batch_size = 5000
     unique_ids = list()
     bozz_job = mongo_db['bozz_job']
     job_list = bozz_job.find(valid_cond).sort([('crawl_time', DESCENDING)]).skip(skip).limit(size)
