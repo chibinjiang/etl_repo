@@ -1,4 +1,5 @@
 from configs.connector import sql_engine, BaseModel
+from freedom_house.model import FreedomCountryScoreModel
 from zhihu.models import ZhihuUserModel, ZhihuArticleModel, ZhihuQuestionModel, ZhihuAnswerModel, \
     ZhihuTopicBestAnswererMapModel, ZhihuTopicMapModel, ZhihuTopicModel
 from anime.models import AnimeAuthorBangumiMapModel, AnimeAuthorModel, AnimeBangumiModel, AnimeEpisodeModel, \

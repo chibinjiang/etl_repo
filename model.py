@@ -45,6 +45,14 @@ class Mixin(object):
 
     @classmethod
     @catch_db_exc()
+    def update_many(cls, *conditions, **set_op):
+        session.query(cls).filter(*conditions).update(
+            set_op
+        )
+        session.commit()
+
+    @classmethod
+    @catch_db_exc()
     def get_by(cls, *conditions):
         model = session.query(cls).filter(*conditions).one_or_none()
         return model
@@ -95,6 +103,13 @@ class Mixin(object):
         for column in self.columns:
             json_data[column] = getattr(self, column)
         return json_data
+
+    @classmethod
+    @catch_db_exc()
+    def distinct(cls, fields, *conditions):
+        fields = [fields] if isinstance(fields, str) else fields
+        exps = [getattr(cls, f) for f in fields]
+        return session.query(cls).filter(*conditions).distinct(*exps).all()
 
 
 @catch_db_exc(default=False, rollback=True)

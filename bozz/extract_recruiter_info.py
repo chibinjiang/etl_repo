@@ -6,7 +6,6 @@ from configs.connector import mongo_db
 from .models import BozzRecruiterModel, BozzCompanyModel
 
 
-
 def parse_each_recruiter(doc):
     data = dict()
     data['name'] = doc['bossName']

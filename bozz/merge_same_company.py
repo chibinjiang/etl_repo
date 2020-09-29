@@ -5,6 +5,7 @@ from scrapy import Selector
 from collections import defaultdict
 from bozz.models import BozzCompanyMapModel, BozzCompanyModel
 
+
 def load_duplicate_tuple():
     name2source_ids = defaultdict(list)
     for model in BozzCompanyModel.query():
