@@ -1,5 +1,7 @@
 from configs.connector import sql_engine, BaseModel
 from freedom_house.model import FreedomCountryScoreModel
+from gdp.models import CountryGDPModel
+from nuclear.models import USNuclearTargetModel
 from zhihu.models import ZhihuUserModel, ZhihuArticleModel, ZhihuQuestionModel, ZhihuAnswerModel, \
     ZhihuTopicBestAnswererMapModel, ZhihuTopicMapModel, ZhihuTopicModel
 from anime.models import AnimeAuthorBangumiMapModel, AnimeAuthorModel, AnimeBangumiModel, AnimeEpisodeModel, \
@@ -7,6 +9,7 @@ from anime.models import AnimeAuthorBangumiMapModel, AnimeAuthorModel, AnimeBang
 from github.models import GithubRepoModel, GithubTopicModel
 from ziroom.models import ZiroomRentalModel, CommunityModel
 from bozz.models import BozzCompanyModel, BozzJobModel, BozzRecruiterModel, BozzCompanyMapModel
+from covid19.models import CountryCovid19Model
 
 
 def init_database():

@@ -111,6 +111,13 @@ class Mixin(object):
         exps = [getattr(cls, f) for f in fields]
         return session.query(cls).filter(*conditions).distinct(*exps).all()
 
+    @classmethod
+    @catch_db_exc()
+    def execute_sql(cls, sql):
+        results = session.execute(sql)
+        for row in results.fetchall():
+            yield row
+
 
 @catch_db_exc(default=False, rollback=True)
 def save_batch(model_list, chunk_size=2000):

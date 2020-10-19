@@ -15,6 +15,7 @@ class CountryModel(Mixin, BaseModel):
     echart_name = Column(VARCHAR(64), index=True)
     iso_abbr = Column(VARCHAR(3), index=True)
     code = Column(VARCHAR(2), index=True)
+    population = Column(INTEGER, index=True)  # 总人口
     updated = Column(TIMESTAMP, index=True, nullable=False)
     created = Column(TIMESTAMP, index=True, nullable=False)
 
