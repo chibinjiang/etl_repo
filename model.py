@@ -24,8 +24,6 @@ def catch_db_exc(logger=None):
                     traceback.print_exc()
                 session.rollback()
                 raise e
-            finally:
-                session.close()
         return catch_exc
     return deco_func
 
@@ -114,7 +112,8 @@ class Mixin(object):
     @catch_db_exc()
     def execute_sql(cls, sql):
         results = session.execute(sql)
-        results = list(results.fetchall())
+        if sql.lower().startswith('select'):
+            results = list(results.fetchall())
         session.commit()
         return results
 
