@@ -52,7 +52,7 @@ def main():
             model.gdp = row[str(year)]
             model.created = datetime.utcnow()
             model.updated = datetime.utcnow()
-            # model.save()
+            model.save()
 
 
 if __name__ == '__main__':
