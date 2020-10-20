@@ -109,6 +109,7 @@ def test():
 
 if __name__ == '__main__':
     """
+    todo: 有待改进
     python -m freedom_house.extract_freedom_score
     """
     read_others()

@@ -43,7 +43,7 @@ def main():
     agg_func = {
         'Confirmed': 'sum', 'Deaths': 'sum', 'Recovered': 'sum'
     }
-    files = "/Users/mac/Learning/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports/10-*.csv"
+    files = "COVID-19/csse_covid_19_data/csse_covid_19_daily_reports/10-*.csv"
     files = sorted(glob(files))
     for file in files:
         rexp = re.search("(\d{2})-(\d{2})-(\d{4})\.csv$", file)
@@ -75,6 +75,7 @@ def main():
 
 def save_daily_new():
     """
+    这里假设所有国家地区都是从2020-01-22 开始的
     更新国家第一天的 daily new
     """
     sql = """
