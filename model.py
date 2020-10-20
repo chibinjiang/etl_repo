@@ -114,9 +114,9 @@ class Mixin(object):
     @catch_db_exc()
     def execute_sql(cls, sql):
         results = session.execute(sql)
+        results = list(results.fetchall())
         session.commit()
-        for row in results.fetchall():
-            yield row
+        return results
 
 
 @catch_db_exc()
