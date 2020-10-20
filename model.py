@@ -6,11 +6,9 @@ from sqlalchemy.ext.declarative import declared_attr
 from configs.connector import session
 
 
-def catch_db_exc(default=None, rollback=False, logger=None):
+def catch_db_exc(logger=None):
     """
     捕获 db操作异常, 并返回默认值
-    :param default: 在异常时返回的值
-    :param rollback: 是否需要rollback
     :param logger:
     :return: default
     """
@@ -24,9 +22,10 @@ def catch_db_exc(default=None, rollback=False, logger=None):
                     logger.error(traceback.format_exc())
                 else:
                     traceback.print_exc()
-            if rollback:
                 session.rollback()
-            return default
+                raise e
+            finally:
+                session.close()
         return catch_exc
     return deco_func
 
@@ -58,7 +57,7 @@ class Mixin(object):
         return model
 
     @classmethod
-    @catch_db_exc(default=[])
+    @catch_db_exc()
     def query(cls, *conditions):
         models = session.query(cls).filter(*conditions).all()
         return models
@@ -70,13 +69,13 @@ class Mixin(object):
         df = pd.read_sql(query.statement, session.bind)
         return df
 
-    @catch_db_exc(default=False, rollback=True)
+    @catch_db_exc()
     def save(self):
         session.add(self)
         session.commit()
         return True
 
-    @catch_db_exc(default=False, rollback=True)
+    @catch_db_exc()
     def delete(self):
         session.delete(self)
         session.commit()
@@ -115,11 +114,12 @@ class Mixin(object):
     @catch_db_exc()
     def execute_sql(cls, sql):
         results = session.execute(sql)
+        session.commit()
         for row in results.fetchall():
             yield row
 
 
-@catch_db_exc(default=False, rollback=True)
+@catch_db_exc()
 def save_batch(model_list, chunk_size=2000):
     def chunks(lst, n):
         for i in range(0, len(lst), n):

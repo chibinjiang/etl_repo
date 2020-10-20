@@ -83,7 +83,8 @@ def save_daily_new():
         from (select country, date, confirmed from country_covid19 where date = '2020-01-22') as first_day
         where t.country = first_day.country and t.date = first_day.date;
     """
-    CountryCovid19Model.execute_sql(sql)
+    for row in CountryCovid19Model.execute_sql(sql):
+        print(row)
     sql = """
         update country_covid19 as c set daily_new = t.daily_new
         from (
@@ -93,7 +94,8 @@ def save_daily_new():
                 and now.country = ago.country
          ) as t where c.country = t.country and c.date = t.date;
     """
-    CountryCovid19Model.execute_sql(sql)
+    for row in CountryCovid19Model.execute_sql(sql):
+        print(row)
 
 
 if __name__ == '__main__':

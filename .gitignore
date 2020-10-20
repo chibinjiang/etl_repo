@@ -4,3 +4,4 @@ __pycache__/
 **/*.pyc
 configs/__init__.py
 .idea/
+COVID-19/
