@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 
 from freestyle_utils.decorators.toolbox import timeit, cache_by_redis
-from configs.connector import mongo_db
+from configs.connector import mongo_db, redis_client
 from .models import BozzRecruiterModel, BozzCompanyModel
 
 
@@ -16,7 +16,7 @@ def parse_each_recruiter(doc):
     return data
 
 
-@cache_by_redis(3600)
+@cache_by_redis(redis_client, 3600)
 def match_company(source_id=None, name=None, logo=None):
     company = None
     if source_id:
