@@ -15,6 +15,7 @@ def load_country_map():
 
 def main():
     """
+    todo: 使用web data 更新最近的数据
     Incidence Rate = cases per 100,000 persons, 每十万人感染
     Case-Fatality Ratio (%) = Number recorded deaths / Number cases
     Active cases = total cases - total recovered - total deaths
@@ -84,6 +85,7 @@ def save_daily_new():
         where t.country = first_day.country and t.date = first_day.date;
     """
     CountryCovid19Model.execute_sql(sql)
+    print("SQL1 done")
     sql = """
         update country_covid19 as c set daily_new = t.daily_new
         from (
@@ -94,6 +96,7 @@ def save_daily_new():
          ) as t where c.country = t.country and c.date = t.date;
     """
     CountryCovid19Model.execute_sql(sql)
+    print("SQL2 done")
 
 
 if __name__ == '__main__':
