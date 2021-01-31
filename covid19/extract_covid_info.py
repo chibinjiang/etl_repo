@@ -15,7 +15,6 @@ def load_country_map():
 
 def main():
     """
-    todo: 使用web data 更新最近的数据
     Incidence Rate = cases per 100,000 persons, 每十万人感染
     Case-Fatality Ratio (%) = Number recorded deaths / Number cases
     Active cases = total cases - total recovered - total deaths
@@ -44,11 +43,15 @@ def main():
     agg_func = {
         'Confirmed': 'sum', 'Deaths': 'sum', 'Recovered': 'sum'
     }
-    files = "COVID-19/csse_covid_19_data/csse_covid_19_daily_reports/10-*.csv"
+    files = "COVID-19/csse_covid_19_data/csse_covid_19_daily_reports/*.csv"
     files = sorted(glob(files))
     for file in files:
         rexp = re.search("(\d{2})-(\d{2})-(\d{4})\.csv$", file)
-        year, month, day = rexp.group(3), rexp.group(1), rexp.group(2)
+        year, month, day = int(rexp.group(3)), int(rexp.group(1)), int(rexp.group(2))
+        date = datetime(year, month=month, day=day).strftime('%Y-%m-%d')
+        if date < '2020-10-01':
+            continue
+        print("=" * 10, f"Date: {date}", "=" * 10)
         df = pd.read_csv(file)
         if 'Country/Region' in df.columns:
             df['Country_Region'] = df['Country/Region']
@@ -59,7 +62,6 @@ def main():
             if country not in country_mapping:
                 print(country, confirmed, deaths, recovered)
                 continue
-            date = f"{year}-{month}-{day}"
             model = CountryCovid19Model.get_by(CountryCovid19Model.date == date, CountryCovid19Model.country == country) \
                     or CountryCovid19Model()
             model.country = country
