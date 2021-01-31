@@ -49,7 +49,7 @@ def main():
         rexp = re.search("(\d{2})-(\d{2})-(\d{4})\.csv$", file)
         year, month, day = int(rexp.group(3)), int(rexp.group(1)), int(rexp.group(2))
         date = datetime(year, month=month, day=day).strftime('%Y-%m-%d')
-        if date < '2020-10-01':
+        if date < '2021-01-01':
             continue
         print("=" * 10, f"Date: {date}", "=" * 10)
         df = pd.read_csv(file)
