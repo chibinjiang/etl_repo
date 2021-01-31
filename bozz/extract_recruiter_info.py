@@ -69,5 +69,5 @@ if __name__ == '__main__':
     """
     bozz_company = mongo_db['bozz_company']
     for company_name in bozz_company.distinct('name'):
-        print(f"处理{company_name}的招聘者")
-        extract_recruiter(company_name)
+        print(f"处理{company_name['name']}的招聘者")
+        extract_recruiter(company_name['name'])

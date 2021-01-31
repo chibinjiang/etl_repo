@@ -5,7 +5,7 @@
 import csv
 from datetime import datetime
 
-from freedom_house.model import CountryModel
+from freedom_house.models import CountryModel
 
 
 def main():

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from .model import CountryModel, FreedomCountryScoreModel
+from .models import CountryModel, FreedomCountryScoreModel
 
 country2echart = {
     'South Korea': 'Dem. Rep. Korea',

@@ -3,7 +3,7 @@ from glob import glob
 import pandas as pd
 import re
 from covid19.models import CountryCovid19Model
-from freedom_house.model import CountryModel
+from freedom_house.models import CountryModel
 
 
 def load_country_map():

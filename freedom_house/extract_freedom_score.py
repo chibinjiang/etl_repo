@@ -1,7 +1,7 @@
 import json
 import requests
 from datetime import datetime
-from freedom_house.model import FreedomCountryScoreModel
+from freedom_house.models import FreedomCountryScoreModel
 
 
 def main():

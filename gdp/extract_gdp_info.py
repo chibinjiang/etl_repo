@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-from freedom_house.model import CountryModel
+from freedom_house.models import CountryModel
 from gdp.models import CountryGDPModel
 
 
